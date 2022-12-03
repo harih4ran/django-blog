@@ -29,7 +29,7 @@ class MyPaginator(Paginator):
 def BlogList(request):
     obj = Blog.objects.all()
     page = request.GET.get('page', 1)
-    paginator = Paginator(obj, 1)
+    paginator = Paginator(obj, 5)
     try:
         blog_lists = paginator.page(page)
     except PageNotAnInteger:
@@ -46,26 +46,33 @@ def BlogDetailView(request,pk):
     post = get_object_or_404(Blog,pk=pk)
     comments = post.comment_post.all()
 
-    if request.method == 'POST' and request.POST['like'] == "no":
+    if request.method == 'POST' and request.POST['action'] == "like":
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             form = comment_form.save(commit=False)
-            form.name = request.user
             form.post = post
             form.save()
-    elif request.method == 'POST' and request.POST['like'] == "yes":
+    elif request.method == 'POST' and request.POST['action'] == "comment":
         data = request.POST
         comment = Comment.objects.get(id = data["id"])
         user = User.objects.get(id = request.user.id)
         comment.likes.add(user)
         comment.save()
-    
+
+    elif request.method == 'POST' and request.POST['action'] == "email":
+        email_form = NewsLetterForm(data=request.POST)
+        if email_form.is_valid():
+            email_form.save()
+
     comment_form = CommentForm()
+    email_form = NewsLetterForm()
+
 
     context = {
         'object' : post,
         'comments': comments,
-        'comment_form': comment_form
+        'comment_form': comment_form,
+        'email_form':email_form
     }
     return render(request,'blog/blog_detail.html',context)     
 

@@ -3,5 +3,6 @@ from content.models import *
 
 admin.site.register([
     Blog,
-    Comment
+    Comment,
+    Newsletter
 ])

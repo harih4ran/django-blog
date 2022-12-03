@@ -15,5 +15,17 @@ class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
 		fields = [
-			"context",
+			"name",
+			"email",
+			"body",
+		]
+
+class NewsLetterForm(forms.ModelForm):
+	class Meta:
+		model = Newsletter
+		fields = [
+			"name",
+			"email",
+			"to",
+			"comment",
 		]

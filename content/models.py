@@ -33,8 +33,9 @@ class Blog(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Blog,on_delete=models.CASCADE,related_name="comment_post",blank = True)
-    name = models.ForeignKey(User,on_delete=models.CASCADE,related_name="comment_user",blank = True)
-    context = models.TextField(null = True,blank = True)
+    name = models.CharField(max_length=150)
+    email = models.EmailField(null = True,blank = True)
+    body = models.TextField(null = True,blank = True)
     likes = models.ManyToManyField(User,related_name="comment_likes",blank = True)
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -47,4 +48,17 @@ class Comment(models.Model):
         ordering = ['date_created']
 
     def __str__(self):
-        return self.context
+        return self.body
+
+class Newsletter(models.Model):
+    name = models.CharField(max_length=150)
+    email = models.EmailField(null = True,blank = True)
+    to = models.EmailField(null = True,blank = True)
+    comment = models.TextField(null = True,blank = True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['date_created']
+
+    def __str__(self):
+        return self.comment
